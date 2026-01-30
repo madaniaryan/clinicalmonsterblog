@@ -1,0 +1,193 @@
+---
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("posts");
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content, headings } = await post.render();
+
+function fmt(d) {
+  const dt = new Date(d);
+  return dt.toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
+}
+
+// Build a simple Table of Contents from H2/H3 headings
+const toc = (headings ?? []).filter((h) => h.depth === 2 || h.depth === 3);
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{post.data.title} — Clinical Monster Blog</title>
+    <style>
+      :root{
+        --text:#0b0f19;
+        --muted:#556070;
+        --border:#e7e7ea;
+        --max:980px;
+        --radius:14px;
+      }
+      body{
+        margin:0;
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+        color:var(--text);
+        line-height:1.6;
+        background:#fff;
+      }
+      a{ color:var(--text); text-decoration:none; }
+      a:hover{ text-decoration:underline; }
+      .container{
+        width:min(var(--max), calc(100% - 48px));
+        margin:0 auto;
+      }
+      header{
+        padding:20px 0 10px;
+      }
+      nav{
+        display:flex;
+        gap:16px;
+        margin-top:10px;
+      }
+      nav a{ color:var(--muted); }
+      nav a:hover{ color:var(--text); }
+
+      .grid{
+        display:grid;
+        grid-template-columns: 220px 1fr;
+        gap:28px;
+        align-items:start;
+        padding-top: 10px;
+      }
+
+      @media (max-width: 980px){
+        .grid{ grid-template-columns: 1fr; }
+      }
+
+      .toc{
+        position: sticky;
+        top: 18px;
+        border-left: 1px solid var(--border);
+        padding-left: 14px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .toc .label{
+        font-size: 11px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+        color: #7b8493;
+      }
+      .toc a{
+        color: var(--muted);
+        display:block;
+        padding: 4px 0;
+      }
+      .toc a:hover{ color: var(--text); }
+
+      article{
+        max-width: 72ch;
+      }
+
+      h1{
+        font-size: 44px;
+        line-height: 1.08;
+        letter-spacing: -0.03em;
+        margin: 0 0 8px;
+      }
+      .date{
+        color: var(--muted);
+        font-size: 14px;
+        margin-bottom: 14px;
+      }
+
+      .hero{
+        width: 100%;
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        overflow: hidden;
+        margin: 14px 0 18px;
+      }
+      .hero img{
+        width: 100%;
+        display:block;
+      }
+
+      .prose p{ margin: 0 0 16px; }
+      .prose h2{
+        margin-top: 34px;
+        margin-bottom: 10px;
+        font-size: 24px;
+        letter-spacing: -0.01em;
+      }
+      .prose h3{
+        margin-top: 20px;
+        margin-bottom: 8px;
+        font-size: 18px;
+      }
+      .prose ul{ margin: 0 0 16px 20px; }
+      .prose blockquote{
+        margin: 18px 0;
+        padding-left: 14px;
+        border-left: 3px solid var(--border);
+        color: var(--muted);
+      }
+    </style>
+  </head>
+
+  <body>
+    <header class="container">
+      <div style="font-weight:650;">Clinical Monster Blog</div>
+      <nav>
+        <a href="/">Home</a>
+        <a href="/blog">Blog</a>
+      </nav>
+    </header>
+
+    <main class="container">
+      <div class="grid">
+        <aside class="toc">
+          <div class="label">In this post</div>
+          {toc.length ? (
+            <nav>
+              {toc.map((h) => (
+                <a href={`#${h.slug}`}>{h.text}</a>
+              ))}
+            </nav>
+          ) : (
+            <div style="color: var(--muted);">No sections yet</div>
+          )}
+        </aside>
+
+        <article>
+  <div style="display:flex; align-items:center; gap:10px; color: var(--muted); font-size:14px; margin-bottom: 10px;">
+    <span>{post.data.author ?? "Clinical Monster Blog"}</span>
+    <span style="opacity:.5;">|</span>
+    <a href="/blog" style="color: var(--muted); text-decoration:none;">All Posts</a>
+  </div>
+
+  <h1>{post.data.title}</h1>
+  <div class="date">{fmt(post.data.date)}</div>
+
+
+          {post.data.heroImage ? (
+            <div class="hero">
+              <img src={post.data.heroImage} alt="" />
+            </div>
+          ) : null}
+
+          <div class="prose">
+            <Content />
+          </div>
+        </article>
+      </div>
+    </main>
+  </body>
+</html>

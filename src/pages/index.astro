@@ -1,0 +1,123 @@
+---
+import { getCollection } from "astro:content";
+
+const posts = (await getCollection("posts"))
+  .sort((a,b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
+
+function fmt(d) {
+  const dt = new Date(d);
+  return dt.toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric" });
+}
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Blog — Clinical Monster Blog</title>
+    <style>
+      :root{
+        --text:#0b0f19;
+        --muted:#556070;
+        --border:#e7e7ea;
+        --max:980px;
+        --radius:14px;
+      }
+      body{
+        margin:0;
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+        color:var(--text);
+        line-height:1.6;
+        background:#fff;
+      }
+      a{ color:var(--text); text-decoration:none; }
+      a:hover{ text-decoration:underline; }
+
+      .container{
+        width:min(var(--max), calc(100% - 48px));
+        margin:0 auto;
+      }
+
+      header{
+        padding:20px 0 10px;
+      }
+      nav{
+        display:flex;
+        gap:16px;
+        margin-top:10px;
+      }
+      nav a{ color:var(--muted); }
+      nav a:hover{ color:var(--text); }
+
+      h1{
+        font-size:38px;
+        letter-spacing:-0.02em;
+        margin:18px 0 18px;
+      }
+
+      ul{ list-style:none; padding:0; margin:0; display:grid; gap:22px; }
+
+      .card{
+        display:grid;
+        grid-template-columns:240px 1fr;
+        gap:18px;
+        align-items:start;
+      }
+      .card img{
+        width:100%;
+        aspect-ratio:16/9;
+        object-fit:cover;
+        border-radius:var(--radius);
+        border:1px solid var(--border);
+      }
+      .card h2{
+        margin:0 0 6px;
+        font-size:22px;
+        letter-spacing:-0.01em;
+        line-height:1.25;
+      }
+      .excerpt{
+        margin:0 0 6px;
+        color:var(--muted);
+        max-width:62ch;
+      }
+      .meta{
+        color:var(--muted);
+        font-size:14px;
+      }
+
+      @media (max-width: 900px){
+        .card{ grid-template-columns:1fr; }
+      }
+    </style>
+  </head>
+
+  <body>
+    <header class="container">
+      <div style="font-weight:650;">Clinical Monster Blog</div>
+      <nav>
+        <a href="/">Home</a>
+        <a href="/blog">Blog</a>
+      </nav>
+    </header>
+
+    <main class="container">
+      <h1>Blog</h1>
+
+      <ul>
+        {posts.map((p) => (
+          <li class="card">
+            <a href={`/blog/${p.slug}/`}>
+              <img src={p.data.heroImage ?? "https://images.unsplash.com/photo-1526256262350-7da7584cf5eb?auto=format&fit=crop&w=1200&q=60"} alt="" />
+            </a>
+            <div>
+              <h2><a href={`/blog/${p.slug}/`}>{p.data.title}</a></h2>
+              {p.data.excerpt ? <p class="excerpt">{p.data.excerpt}</p> : null}
+              <div class="meta">{fmt(p.data.date)}</div>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </main>
+  </body>
+</html>
