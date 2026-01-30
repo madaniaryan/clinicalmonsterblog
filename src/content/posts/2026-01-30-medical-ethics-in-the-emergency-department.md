@@ -1,12 +1,18 @@
 ---
 title: Medical Ethics in the Emergency Department
 date: 2026-01-30
-author: Senior Editor
+author: "Resident Editor: Philippe Ayres, MD Guest Faculty Editor: James Willis, MD"
 categories:
   - Evidence
 hero_image: /images/uploads/medical-ethics.png
-excerpt: |+
-  Resident Editor: Philippe Ayres, MD Guest Faculty Editor: James Willis, MD
+excerpt: It’s nearly midnight in your busy urban emergency department (ED). As
+  the senior resident, you just received sign-out from the day team on eight
+  patients in addition to keeping up with new patients. You look on the track
+  board and see a new patient with a chief complaint of “chest pain”. It’s a
+  70-year-old man and you recognize the name because you’ve personally seen this
+  patient no less than five times in the past week and always with the same
+  complaint. According to your medical record, he has been seen over 100 times
+  in the past three months in various EDs.
 ---
 It’s nearly midnight in your busy urban emergency department (ED). As the senior resident, you just received sign-out from the day team on eight patients in addition to keeping up with new patients. You look on the track board and see a new patient with a chief complaint of “chest pain”. It’s a 70-year-old man and you recognize the name because you’ve personally seen this patient no less than five times in the past week and always with the same complaint. According to your medical record, he has been seen over 100 times in the past three months in various EDs.
 
