@@ -14,10 +14,36 @@ collections:
     folder: "src/content/posts"
     create: true
     slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    summary: "{{title}} — {{date}} — {{author}}"
     fields:
       - { label: "Title", name: "title", widget: "string" }
-      - { label: "Date", name: "date", widget: "datetime" }
-      - { label: "Author", name: "author", widget: "string", required: false }
-      - { label: "Excerpt", name: "excerpt", widget: "text", required: false }
-      - { label: "Hero Image", name: "heroImage", widget: "image", required: false }
+
+      - { label: "Date", name: "date", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false }
+
+      - label: "Author"
+        name: "author"
+        widget: "select"
+        options:
+          - "Aryan Madani, DO"
+          - "Phoebe Draper, MD"
+          - "Senior Editor"
+          - "Editor-in-Chief"
+
+      - label: "Categories"
+        name: "categories"
+        widget: "select"
+        multiple: true
+        options:
+          - "Ultrasound"
+          - "Resus"
+          - "Evidence"
+          - "Workflow"
+          - "ECG"
+          - "Images"
+          - "Photos"
+
+      - { label: "Hero Image", name: "hero_image", widget: "image", required: false }
+
+      - { label: "Excerpt", name: "excerpt", widget: "text", required: false, hint: "Shown on the blog list page under the title." }
+
       - { label: "Body", name: "body", widget: "markdown" }
