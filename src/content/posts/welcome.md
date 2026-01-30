@@ -8,8 +8,6 @@ heroImage: /images/uploads/placeholder.png
 categories:
   - Workflow
 ---
-Got you — here’s a **clean, copy-paste-ready message** you can drop straight onto the Netlify site (or send to collaborators). I wrote it in plain, reassuring language so non-technical people don’t panic, but it’s still accurate.
-
 ### ⚠️ Demo Site — How This Works
 
 Welcome! This site is currently a **demo / sandbox environment**.
