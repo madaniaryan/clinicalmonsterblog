@@ -82,13 +82,3 @@ This space is intentionally low-pressure.
 * Nothing is final until we say it is
 
 We design here first — and publish only when we’re ready.
-
-If you want, next I can:
-
-* Make this **shorter / more casual**
-* Rewrite it for a **banner or modal**
-* Add a **“Demo Mode” badge**
-* Convert this into a **homepage callout box**
-* Or tailor it to **non-technical collaborators vs developers**
-
-Just tell me the vibe.
