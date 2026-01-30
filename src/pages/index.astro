@@ -145,6 +145,14 @@ function fmt(d) {
         margin-top: 26px;
         padding-bottom: 28px;
       }
+      .sectionWrap{
+        border: 1px solid var(--border);
+        border-radius: calc(var(--radius) + 6px);
+        background: rgba(255, 255, 255, 0.75);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        padding: 20px;
+      }
       .sectionHeader{
         display:flex;
         align-items:baseline;
@@ -171,7 +179,7 @@ function fmt(d) {
         border: 1px solid var(--border);
         border-radius: var(--radius);
         padding: 14px 14px;
-        background: #fff;
+        background: rgba(255, 255, 255, 0.5);
         display:grid;
         grid-template-columns: 140px 1fr;
         gap: 14px;
@@ -274,7 +282,6 @@ function fmt(d) {
       main.container {
         position: relative;
         z-index: 10;
-        background: var(--bg);
       }
 
       @media (max-width: 640px) {
@@ -305,6 +312,7 @@ function fmt(d) {
         <nav>
           <a href="/">Home</a>
           <a href="/blog">Blog</a>
+          <a href="/admin/">Editor Login</a>
         </nav>
 
         <div class="heroWrap">
@@ -326,7 +334,6 @@ function fmt(d) {
 
             <div class="ctaRow">
               <a class="btn btnPrimary" href="/blog">Read the Blog →</a>
-              <a class="btn" href="/admin/">Editor Login (CMS)</a>
             </div>
 
             <div class="pillRow">
@@ -343,31 +350,33 @@ function fmt(d) {
     </div>
 
     <main class="container section">
-      <div class="sectionHeader">
-        <h2>Latest Posts</h2>
-        <a href="/blog">View all</a>
-      </div>
+      <div class="sectionWrap">
+        <div class="sectionHeader">
+          <h2>Latest Posts</h2>
+          <a href="/blog">View all</a>
+        </div>
 
-      <div class="cards">
-        {posts.map((post) => (
-          <a class="card" href={`/blog/${post.slug}/`}>
-            <img
-              class="thumb"
-              src={post.data.hero_image ?? "/images/uploads/placeholder.png"}
-              alt={post.data.title}
-              loading="lazy"
-            />
-            <div>
-              <h3>{post.data.title}</h3>
-              {post.data.excerpt ? <p>{post.data.excerpt}</p> : null}
-              <div class="meta">
-                <span>{post.data.author ?? "Clinical Monster Blog"}</span>
-                <span style="opacity:.5;"> • </span>
-                <span>{fmt(post.data.date)}</span>
+        <div class="cards">
+          {posts.map((post) => (
+            <a class="card" href={`/blog/${post.slug}/`}>
+              <img
+                class="thumb"
+                src={post.data.hero_image ?? "/images/uploads/placeholder.png"}
+                alt={post.data.title}
+                loading="lazy"
+              />
+              <div>
+                <h3>{post.data.title}</h3>
+                {post.data.excerpt ? <p>{post.data.excerpt}</p> : null}
+                <div class="meta">
+                  <span>{post.data.author ?? "Clinical Monster Blog"}</span>
+                  <span style="opacity:.5;"> • </span>
+                  <span>{fmt(post.data.date)}</span>
+                </div>
               </div>
-            </div>
-          </a>
-        ))}
+            </a>
+          ))}
+        </div>
       </div>
     </main>
 
