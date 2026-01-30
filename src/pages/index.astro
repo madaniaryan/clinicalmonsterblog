@@ -2,7 +2,8 @@
 import { getCollection } from "astro:content";
 
 const posts = (await getCollection("posts"))
-  .sort((a,b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
+  .sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime())
+  .slice(0, 5);
 
 function fmt(d) {
   const dt = new Date(d);
@@ -14,22 +15,27 @@ function fmt(d) {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Blog — Clinical Monster Blog</title>
+    <title>Clinical Monster Blog</title>
     <style>
       :root{
-        --text:#0b0f19;
+        --brand:#C8102E;      /* Kings red */
+        --text:#0b0f19;       /* near-black */
         --muted:#556070;
         --border:#e7e7ea;
+        --bg:#ffffff;
+        --soft:#f6f7f9;
         --max:980px;
         --radius:14px;
       }
+
       body{
         margin:0;
         font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
         color:var(--text);
         line-height:1.6;
-        background:#fff;
+        background: var(--bg);
       }
+
       a{ color:var(--text); text-decoration:none; }
       a:hover{ text-decoration:underline; }
 
@@ -41,6 +47,7 @@ function fmt(d) {
       header{
         padding:20px 0 10px;
       }
+
       nav{
         display:flex;
         gap:16px;
@@ -49,45 +56,172 @@ function fmt(d) {
       nav a{ color:var(--muted); }
       nav a:hover{ color:var(--text); }
 
-      h1{
-        font-size:38px;
-        letter-spacing:-0.02em;
-        margin:18px 0 18px;
+      /* Hero */
+      .heroWrap{
+        margin-top: 14px;
+        border: 1px solid var(--border);
+        border-radius: calc(var(--radius) + 6px);
+        background:
+          radial-gradient(1200px 600px at 10% -20%, rgba(200,16,46,.14), transparent 55%),
+          radial-gradient(900px 500px at 110% 0%, rgba(11,15,25,.08), transparent 50%),
+          #fff;
+        overflow:hidden;
       }
-
-      ul{ list-style:none; padding:0; margin:0; display:grid; gap:22px; }
-
-      .card{
+      .hero{
+        padding: 26px 26px 22px;
         display:grid;
-        grid-template-columns:240px 1fr;
-        gap:18px;
-        align-items:start;
+        grid-template-columns: 1fr;
+        gap: 14px;
       }
-      .card img{
+
+      .brandRow{
+        display:flex;
+        align-items:center;
+        gap: 14px;
+      }
+      .logo{
+        width: 120px;
+        height:auto;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        background:#fff;
+        padding: 8px 10px;
+      }
+
+      .title{
+        font-size: 40px;
+        line-height: 1.08;
+        letter-spacing: -0.03em;
+        margin: 2px 0 0;
+      }
+      .subtitle{
+        color: var(--muted);
+        margin: 0;
+        max-width: 75ch;
+        font-size: 16px;
+      }
+
+      .ctaRow{
+        display:flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 6px;
+      }
+
+      .btn{
+        display:inline-flex;
+        align-items:center;
+        gap:10px;
+        padding: 10px 14px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        background: #fff;
+        font-weight: 600;
+      }
+      .btnPrimary{
+        background: var(--brand);
+        color: #fff;
+        border-color: rgba(0,0,0,.08);
+      }
+      .btnPrimary:hover{ text-decoration:none; filter: brightness(.98); }
+      .btn:hover{ text-decoration:none; border-color: #cfd3da; }
+
+      .pillRow{
+        display:flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 10px;
+      }
+      .pill{
+        font-size: 12px;
+        color: var(--muted);
+        border: 1px solid var(--border);
+        background: var(--soft);
+        padding: 6px 10px;
+        border-radius: 999px;
+      }
+
+      /* Sections */
+      .section{
+        margin-top: 26px;
+        padding-bottom: 28px;
+      }
+      .sectionHeader{
+        display:flex;
+        align-items:baseline;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 14px;
+      }
+      .sectionHeader h2{
+        margin:0;
+        font-size: 18px;
+        letter-spacing: -0.01em;
+      }
+      .sectionHeader a{
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .cards{
+        display:grid;
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+      .card{
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 14px 14px;
+        background: #fff;
+        display:grid;
+        grid-template-columns: 140px 1fr;
+        gap: 14px;
+        align-items:center;
+      }
+      @media (max-width: 720px){
+        .card{ grid-template-columns: 1fr; }
+        .logo{ width: 96px; }
+        .title{ font-size: 34px; }
+      }
+
+      .thumb{
         width:100%;
-        aspect-ratio:16/9;
-        object-fit:cover;
-        border-radius:var(--radius);
-        border:1px solid var(--border);
+        height:86px;
+        border-radius: 12px;
+        border: 1px solid var(--border);
+        object-fit: cover;
+        background: var(--soft);
       }
-      .card h2{
+
+      .card h3{
         margin:0 0 6px;
-        font-size:22px;
-        letter-spacing:-0.01em;
-        line-height:1.25;
+        font-size: 16px;
+        line-height: 1.25;
       }
-      .excerpt{
+      .card p{
         margin:0 0 6px;
-        color:var(--muted);
-        max-width:62ch;
+        color: var(--muted);
+        font-size: 14px;
       }
       .meta{
-        color:var(--muted);
-        font-size:14px;
+        color: var(--muted);
+        font-size: 12px;
       }
 
-      @media (max-width: 900px){
-        .card{ grid-template-columns:1fr; }
+      footer{
+        border-top: 1px solid var(--border);
+        padding: 18px 0 26px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .brandDot{
+        display:inline-block;
+        width:10px;
+        height:10px;
+        border-radius:999px;
+        background: var(--brand);
+        margin-right: 8px;
+        transform: translateY(1px);
       }
     </style>
   </head>
@@ -99,25 +233,75 @@ function fmt(d) {
         <a href="/">Home</a>
         <a href="/blog">Blog</a>
       </nav>
+
+      <div class="heroWrap">
+        <div class="hero">
+          <div class="brandRow">
+            <img class="logo" src="/images/kings-logo.png" alt="Kings County / Downstate Emergency Medicine" />
+            <div>
+              <div style="color: var(--muted); font-size:12px; letter-spacing:.12em; text-transform:uppercase;">
+                Emergency Medicine • FOAMed • Kings County / Downstate
+              </div>
+              <h1 class="title">Clinical Monster</h1>
+            </div>
+          </div>
+
+          <p class="subtitle">
+            High-yield, practical emergency medicine notes—built for busy clinicians.
+            Weekly posts, clean visuals, and the occasional obsession with workflow.
+          </p>
+
+          <div class="ctaRow">
+            <a class="btn btnPrimary" href="/blog">Read the Blog →</a>
+            <a class="btn" href="/admin/">Editor Login (CMS)</a>
+          </div>
+
+          <div class="pillRow">
+            <span class="pill">Ultrasound</span>
+            <span class="pill">Resus</span>
+            <span class="pill">Evidence</span>
+            <span class="pill">Workflow</span>
+            <span class="pill">ECG</span>
+            <span class="pill">Images / Photos</span>
+          </div>
+        </div>
+      </div>
     </header>
 
-    <main class="container">
-      <h1>Blog</h1>
+    <main class="container section">
+      <div class="sectionHeader">
+        <h2>Latest Posts</h2>
+        <a href="/blog">View all</a>
+      </div>
 
-      <ul>
-        {posts.map((p) => (
-          <li class="card">
-            <a href={`/blog/${p.slug}/`}>
-              <img src={p.data.heroImage ?? "https://images.unsplash.com/photo-1526256262350-7da7584cf5eb?auto=format&fit=crop&w=1200&q=60"} alt="" />
-            </a>
+      <div class="cards">
+        {posts.map((post) => (
+          <a class="card" href={`/blog/${post.slug}/`}>
+            <img
+              class="thumb"
+              src={post.data.hero_image ?? "/images/uploads/placeholder.png"}
+              alt={post.data.title}
+              loading="lazy"
+            />
             <div>
-              <h2><a href={`/blog/${p.slug}/`}>{p.data.title}</a></h2>
-              {p.data.excerpt ? <p class="excerpt">{p.data.excerpt}</p> : null}
-              <div class="meta">{fmt(p.data.date)}</div>
+              <h3>{post.data.title}</h3>
+              {post.data.excerpt ? <p>{post.data.excerpt}</p> : null}
+              <div class="meta">
+                <span>{post.data.author ?? "Clinical Monster Blog"}</span>
+                <span style="opacity:.5;"> • </span>
+                <span>{fmt(post.data.date)}</span>
+              </div>
             </div>
-          </li>
+          </a>
         ))}
-      </ul>
+      </div>
     </main>
+
+    <footer>
+      <div class="container">
+        <span class="brandDot"></span>
+        Built with Astro + Decap CMS • <a href="/blog">Blog</a> • <a href="/admin/">Admin</a>
+      </div>
+    </footer>
   </body>
 </html>
