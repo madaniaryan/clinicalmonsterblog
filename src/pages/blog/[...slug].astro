@@ -60,7 +60,7 @@ const toc = (headings ?? []).filter((h) => h.depth === 2 || h.depth === 3);
 
       .grid{
         display:grid;
-        grid-template-columns: 220px 1fr;
+        grid-template-columns: minmax(0, 220px) 1fr;
         gap:28px;
         align-items:start;
         padding-top: 10px;
@@ -76,6 +76,11 @@ const toc = (headings ?? []).filter((h) => h.depth === 2 || h.depth === 3);
         padding-left: 14px;
         color: var(--muted);
         font-size: 13px;
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+        min-width: 0;
+        max-width: 220px;
+        overflow: hidden;
       }
       .toc .label{
         font-size: 11px;
@@ -88,6 +93,8 @@ const toc = (headings ?? []).filter((h) => h.depth === 2 || h.depth === 3);
         color: var(--muted);
         display:block;
         padding: 4px 0;
+        overflow-wrap: break-word;
+        word-break: break-word;
       }
       .toc a:hover{ color: var(--text); }
 
