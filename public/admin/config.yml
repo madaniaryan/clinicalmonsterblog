@@ -20,14 +20,7 @@ collections:
 
       - { label: "Date", name: "date", widget: "datetime", date_format: "YYYY-MM-DD", time_format: false }
 
-      - label: "Author"
-        name: "author"
-        widget: "select"
-        options:
-          - "Aryan Madani, DO"
-          - "Phoebe Draper, MD"
-          - "Senior Editor"
-          - "Editor-in-Chief"
+      - { label: "Author", name: "author", widget: "string" }
 
       - label: "Categories"
         name: "categories"
