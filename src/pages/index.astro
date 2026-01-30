@@ -61,10 +61,9 @@ function fmt(d) {
         margin-top: 14px;
         border: 1px solid var(--border);
         border-radius: calc(var(--radius) + 6px);
-        background:
-          radial-gradient(1200px 600px at 10% -20%, rgba(200,16,46,.14), transparent 55%),
-          radial-gradient(900px 500px at 110% 0%, rgba(11,15,25,.08), transparent 50%),
-          #fff;
+        background: rgba(255, 255, 255, 0.75);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
         overflow:hidden;
       }
       .hero{
@@ -213,6 +212,9 @@ function fmt(d) {
         padding: 18px 0 26px;
         color: var(--muted);
         font-size: 13px;
+        background: var(--bg);
+        position: relative;
+        z-index: 10;
       }
       .brandDot{
         display:inline-block;
@@ -223,50 +225,122 @@ function fmt(d) {
         margin-right: 8px;
         transform: translateY(1px);
       }
+
+      /* Home Banner - scrollable background layer */
+      .home-banner-layer {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 100vh;
+        z-index: 0;
+        pointer-events: none;
+        overflow: hidden;
+      }
+      .home-banner {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: var(--bannerHeight, 600px);
+        background-image: url("/images/banner-clinical-monsters.png");
+        background-size: cover;
+        background-position: center top;
+        opacity: var(--bannerOpacity, 1);
+        transform: translateY(var(--bannerScroll, 0px));
+        transition: opacity 0.05s linear;
+      }
+      .home-banner::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 50%, rgba(255,255,255,0.4) 80%, rgba(255,255,255,1) 100%);
+        pointer-events: none;
+      }
+
+      /* Fixed foreground layer - hero + posts stay put */
+      .fixed-foreground {
+        position: relative;
+        z-index: 10;
+        pointer-events: auto;
+      }
+
+      header.container {
+        position: relative;
+        z-index: 1;
+      }
+
+      /* Main content needs proper z-index */
+      main.container {
+        position: relative;
+        z-index: 10;
+        background: var(--bg);
+      }
+
+      @media (max-width: 640px) {
+        .home-banner {
+          --bannerHeight: 400px;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .home-banner {
+          opacity: 1;
+          transform: none;
+          transition: none;
+        }
+      }
     </style>
   </head>
 
   <body>
-    <header class="container">
-      <div style="font-weight:650;">Clinical Monster Blog</div>
-      <nav>
-        <a href="/">Home</a>
-        <a href="/blog">Blog</a>
-      </nav>
+    <!-- Fixed banner layer that scrolls at parallax speed -->
+    <div class="home-banner-layer" aria-hidden="true">
+      <div id="homeBanner" class="home-banner"></div>
+    </div>
 
-      <div class="heroWrap">
-        <div class="hero">
-          <div class="brandRow">
-            <img class="logo" src="/images/kings-logo.png" alt="Kings County / Downstate Emergency Medicine" />
-            <div>
-              <div style="color: var(--muted); font-size:12px; letter-spacing:.12em; text-transform:uppercase;">
-                Emergency Medicine • FOAMed • Kings County / Downstate
+    <!-- Foreground content - stays in place while banner scrolls behind -->
+    <div class="fixed-foreground">
+      <header class="container">
+        <div style="font-weight:650;">Clinical Monster Blog</div>
+        <nav>
+          <a href="/">Home</a>
+          <a href="/blog">Blog</a>
+        </nav>
+
+        <div class="heroWrap">
+          <div class="hero">
+            <div class="brandRow">
+              <img class="logo" src="/images/kings-logo.png" alt="Kings County / Downstate Emergency Medicine" />
+              <div>
+                <div style="color: var(--muted); font-size:12px; letter-spacing:.12em; text-transform:uppercase;">
+                  Emergency Medicine • FOAMed • Kings County / Downstate
+                </div>
+                <h1 class="title">Clinical Monster</h1>
               </div>
-              <h1 class="title">Clinical Monster</h1>
+            </div>
+
+            <p class="subtitle">
+              High-yield, practical emergency medicine notes—built for busy clinicians.
+              Weekly posts, clean visuals, and the occasional obsession with workflow.
+            </p>
+
+            <div class="ctaRow">
+              <a class="btn btnPrimary" href="/blog">Read the Blog →</a>
+              <a class="btn" href="/admin/">Editor Login (CMS)</a>
+            </div>
+
+            <div class="pillRow">
+              <span class="pill">Ultrasound</span>
+              <span class="pill">Resus</span>
+              <span class="pill">Evidence</span>
+              <span class="pill">Workflow</span>
+              <span class="pill">ECG</span>
+              <span class="pill">Images / Photos</span>
             </div>
           </div>
-
-          <p class="subtitle">
-            High-yield, practical emergency medicine notes—built for busy clinicians.
-            Weekly posts, clean visuals, and the occasional obsession with workflow.
-          </p>
-
-          <div class="ctaRow">
-            <a class="btn btnPrimary" href="/blog">Read the Blog →</a>
-            <a class="btn" href="/admin/">Editor Login (CMS)</a>
-          </div>
-
-          <div class="pillRow">
-            <span class="pill">Ultrasound</span>
-            <span class="pill">Resus</span>
-            <span class="pill">Evidence</span>
-            <span class="pill">Workflow</span>
-            <span class="pill">ECG</span>
-            <span class="pill">Images / Photos</span>
-          </div>
         </div>
-      </div>
-    </header>
+      </header>
+    </div>
 
     <main class="container section">
       <div class="sectionHeader">
@@ -303,5 +377,48 @@ function fmt(d) {
         Built with Astro + Decap CMS • <a href="/blog">Blog</a> • <a href="/admin/">Admin</a>
       </div>
     </footer>
+
+    <script>
+      (function() {
+        // Constants - tweak these to adjust behavior
+        const FADE_START = 300;     // px of scroll before fade begins
+        const FADE_DISTANCE = 500;  // px of scroll for banner to fade from 1 to 0
+        const PARALLAX_SPEED = 0.6; // Banner scrolls at 60% of page scroll speed (0 = fixed, 1 = normal)
+
+        // Respect prefers-reduced-motion
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (prefersReducedMotion) return;
+
+        const root = document.documentElement;
+        let ticking = false;
+
+        function updateBanner() {
+          const scrollY = window.scrollY || window.pageYOffset;
+
+          // Parallax: banner scrolls slower than the page
+          const bannerScroll = scrollY * PARALLAX_SPEED;
+          root.style.setProperty('--bannerScroll', `-${bannerScroll}px`);
+
+          // Banner stays at full opacity until FADE_START, then fades over FADE_DISTANCE
+          const fadeProgress = Math.max(0, scrollY - FADE_START) / FADE_DISTANCE;
+          const opacity = Math.max(0, Math.min(1, 1 - fadeProgress));
+          root.style.setProperty('--bannerOpacity', opacity.toString());
+
+          ticking = false;
+        }
+
+        function onScroll() {
+          if (!ticking) {
+            requestAnimationFrame(updateBanner);
+            ticking = true;
+          }
+        }
+
+        // Initialize on load (handles mid-page reload)
+        updateBanner();
+
+        window.addEventListener('scroll', onScroll, { passive: true });
+      })();
+    </script>
   </body>
 </html>
