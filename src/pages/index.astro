@@ -24,7 +24,7 @@ function fmt(d) {
         --border:#e7e7ea;
         --bg:#ffffff;
         --soft:#f6f7f9;
-        --max:980px;
+        --max:1100px;
         --radius:14px;
       }
 
@@ -284,6 +284,119 @@ function fmt(d) {
         z-index: 10;
       }
 
+      /* Two-column layout for main content */
+      .mainGrid {
+        display: grid;
+        grid-template-columns: 1fr 320px;
+        gap: 24px;
+        align-items: start;
+      }
+
+      @media (max-width: 900px) {
+        .mainGrid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* Instagram Feed Styles */
+      .instagramFeed {
+        position: sticky;
+        top: 20px;
+      }
+      .instagramHeader {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 14px;
+      }
+      .instagramHeader h2 {
+        margin: 0;
+        font-size: 18px;
+        letter-spacing: -0.01em;
+      }
+      .instagramIcon {
+        width: 24px;
+        height: 24px;
+      }
+      .instagramProfile {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        background: rgba(255, 255, 255, 0.5);
+        margin-bottom: 12px;
+        text-decoration: none;
+        transition: border-color 0.15s;
+      }
+      .instagramProfile:hover {
+        border-color: #E1306C;
+        text-decoration: none;
+      }
+      .profileAvatar {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-weight: 700;
+        font-size: 18px;
+      }
+      .profileInfo {
+        flex: 1;
+      }
+      .profileHandle {
+        font-weight: 600;
+        font-size: 15px;
+        color: var(--text);
+      }
+      .profileLabel {
+        font-size: 12px;
+        color: var(--muted);
+      }
+      .followBtn {
+        padding: 8px 16px;
+        background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+        color: #fff;
+        font-weight: 600;
+        font-size: 13px;
+        border-radius: 8px;
+        border: none;
+      }
+      .instagramEmbed {
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        background: rgba(255, 255, 255, 0.5);
+        padding: 14px;
+        text-align: center;
+      }
+      .instagramEmbed p {
+        margin: 0 0 12px;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .viewProfileBtn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 18px;
+        background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+        color: #fff;
+        font-weight: 600;
+        font-size: 14px;
+        border-radius: 10px;
+        text-decoration: none;
+        transition: opacity 0.15s;
+      }
+      .viewProfileBtn:hover {
+        opacity: 0.9;
+        text-decoration: none;
+      }
+
       @media (max-width: 640px) {
         .home-banner {
           --bannerHeight: 400px;
@@ -350,33 +463,77 @@ function fmt(d) {
     </div>
 
     <main class="container section">
-      <div class="sectionWrap">
-        <div class="sectionHeader">
-          <h2>Latest Posts</h2>
-          <a href="/blog">View all</a>
+      <div class="mainGrid">
+        <div class="sectionWrap">
+          <div class="sectionHeader">
+            <h2>Latest Posts</h2>
+            <a href="/blog">View all</a>
+          </div>
+
+          <div class="cards">
+            {posts.map((post) => (
+              <a class="card" href={`/blog/${post.slug}/`}>
+                <img
+                  class="thumb"
+                  src={post.data.hero_image ?? "/images/uploads/placeholder.png"}
+                  alt={post.data.title}
+                  loading="lazy"
+                />
+                <div>
+                  <h3>{post.data.title}</h3>
+                  {post.data.excerpt ? <p>{post.data.excerpt}</p> : null}
+                  <div class="meta">
+                    <span>{post.data.author ?? "Clinical Monster Blog"}</span>
+                    <span style="opacity:.5;"> • </span>
+                    <span>{fmt(post.data.date)}</span>
+                  </div>
+                </div>
+              </a>
+            ))}
+          </div>
         </div>
 
-        <div class="cards">
-          {posts.map((post) => (
-            <a class="card" href={`/blog/${post.slug}/`}>
-              <img
-                class="thumb"
-                src={post.data.hero_image ?? "/images/uploads/placeholder.png"}
-                alt={post.data.title}
-                loading="lazy"
-              />
-              <div>
-                <h3>{post.data.title}</h3>
-                {post.data.excerpt ? <p>{post.data.excerpt}</p> : null}
-                <div class="meta">
-                  <span>{post.data.author ?? "Clinical Monster Blog"}</span>
-                  <span style="opacity:.5;"> • </span>
-                  <span>{fmt(post.data.date)}</span>
-                </div>
+        <aside class="instagramFeed">
+          <div class="sectionWrap">
+            <div class="instagramHeader">
+              <svg class="instagramIcon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="igGradient" x1="0%" y1="100%" x2="100%" y2="0%">
+                    <stop offset="0%" style="stop-color:#f09433"/>
+                    <stop offset="25%" style="stop-color:#e6683c"/>
+                    <stop offset="50%" style="stop-color:#dc2743"/>
+                    <stop offset="75%" style="stop-color:#cc2366"/>
+                    <stop offset="100%" style="stop-color:#bc1888"/>
+                  </linearGradient>
+                </defs>
+                <rect x="2" y="2" width="20" height="20" rx="5" stroke="url(#igGradient)" stroke-width="2"/>
+                <circle cx="12" cy="12" r="4" stroke="url(#igGradient)" stroke-width="2"/>
+                <circle cx="17.5" cy="6.5" r="1.5" fill="url(#igGradient)"/>
+              </svg>
+              <h2>Instagram</h2>
+            </div>
+
+            <a href="https://www.instagram.com/kingsmeded" target="_blank" rel="noopener noreferrer" class="instagramProfile">
+              <div class="profileAvatar">KM</div>
+              <div class="profileInfo">
+                <div class="profileHandle">@kingsmeded</div>
+                <div class="profileLabel">Follow us on Instagram</div>
               </div>
             </a>
-          ))}
-        </div>
+
+            <div class="instagramEmbed">
+              <p>See our latest updates, clinical pearls, and behind-the-scenes content</p>
+              <a href="https://www.instagram.com/kingsmeded" target="_blank" rel="noopener noreferrer" class="viewProfileBtn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <rect x="2" y="2" width="20" height="20" rx="5" stroke="currentColor" stroke-width="2" fill="none"/>
+                  <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2" fill="none"/>
+                  <circle cx="17.5" cy="6.5" r="1.5" fill="currentColor"/>
+                </svg>
+                View Profile
+              </a>
+            </div>
+          </div>
+        </aside>
       </div>
     </main>
 
